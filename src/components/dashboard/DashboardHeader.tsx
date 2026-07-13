@@ -17,7 +17,7 @@ export default function DashboardHeader() {
            
             <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                    Welcome back, {session?.user?.name?.split(" ")[0] || "User"}! 👋
+                    Welcome back, {session?.user?.name || "User"}! 👋
                 </h1>
                 <p className="text-sm text-gray-500">Here is your inventory summary today.</p>
             </div>

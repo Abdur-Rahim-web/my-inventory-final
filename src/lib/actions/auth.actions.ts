@@ -30,6 +30,7 @@ export async function loginUser(data: LoginInput): Promise<AuthResponse> {
             redirect: false,
         });
         return { success: true, message: "Login Successful!" };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return { success: false, message: "Invalid credentials" };
     }

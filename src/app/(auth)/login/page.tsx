@@ -23,8 +23,7 @@ export default function LoginPage() {
             const result = await loginUser(data);
             if (result.success) {
                 toast.success("Login Successful!");
-                // Use window.location to force a full reload and session refresh
-                window.location.href = "/dashboard";
+                router.push("/dashboard");
             } else {
                 toast.error(result.message);
             }
