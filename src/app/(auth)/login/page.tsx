@@ -1,25 +1,30 @@
 "use client";
 
 import { useTransition } from "react";
-import { loginUser, AuthResponse } from "@/lib/actions/auth.actions";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { loginUser } from "@/lib/actions/auth.actions";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, LogIn } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 export default function LoginPage() {
     const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
-        const data = {
-            email: formData.get("email") as string,
-            password: formData.get("password") as string,
-        };
-
         startTransition(async () => {
-            const result: AuthResponse = await loginUser(data);
+            const data = {
+                email: formData.get("email") as string,
+                password: formData.get("password") as string,
+            };
+            const result = await loginUser(data);
             if (result.success) {
-                toast.success(result.message);
-                // এখানে চাইলে ড্যাশবোর্ডে রিডাইরেক্ট করতে পারেন: window.location.href = "/dashboard";
+                toast.success("Login Successful!");
+                // Use window.location to force a full reload and session refresh
+                window.location.href = "/dashboard";
             } else {
                 toast.error(result.message);
             }
@@ -31,7 +36,6 @@ export default function LoginPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
                 className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-gray-100"
             >
                 <div className="text-center mb-8">
@@ -39,7 +43,8 @@ export default function LoginPage() {
                     <p className="text-gray-500 mt-2">Sign in to your inventory account</p>
                 </div>
 
-                <form action={handleSubmit} className="space-y-5">
+
+                <form action={handleSubmit} className="space-y-4">
                     <div className="relative">
                         <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
                         <input
@@ -62,21 +67,32 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                    <button
                         disabled={isPending}
                         className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:bg-blue-300"
                     >
-                        {isPending ? (
-                            <Loader2 className="animate-spin" size={20} />
-                        ) : (
-                            <>
-                                <LogIn size={20} /> Sign In
-                            </>
-                        )}
-                    </motion.button>
+                        {isPending ? <Loader2 className="animate-spin" size={20} /> : <><LogIn size={20} /> Sign In</>}
+                    </button>
                 </form>
+
+                <div className="my-6 flex items-center">
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                    <span className="px-3 text-gray-400 text-sm">OR</span>
+                    <div className="flex-1 h-px bg-gray-200"></div>
+                </div>
+
+
+                <button
+                    onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                    className="w-full flex items-center justify-center gap-3 border border-gray-200 py-3 rounded-xl font-semibold hover:bg-gray-50 transition"
+                >
+                    <FcGoogle size={24} />
+                    Continue with Google
+                </button>
+
+                <div className="mt-6 text-center text-sm text-gray-600">
+                    Don&apos;t have an account? <Link href="/register" className="text-blue-600 font-bold hover:underline">Register here</Link>
+                </div>
             </motion.div>
         </div>
     );
