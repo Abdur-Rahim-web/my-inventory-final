@@ -1,4 +1,4 @@
-// src/lib/actions/auth.actions.ts
+
 "use server"
 
 import { loginSchema, registerSchema } from "@/utils/validation";
