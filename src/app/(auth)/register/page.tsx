@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { registerUser } from "@/lib/actions/auth.actions";
+import { registerUser, AuthResponse } from "@/lib/actions/auth.actions";
 
 export default function RegisterPage() {
     const [isPending, startTransition] = useTransition();
@@ -14,11 +14,11 @@ export default function RegisterPage() {
         };
 
         startTransition(async () => {
-            const result = await registerUser(data);
+            const result: AuthResponse = await registerUser(data);
             if (result.success) {
                 alert(result.message);
             } else {
-                console.error(result.errors);
+                console.error(result.message, result.errors || "");
             }
         });
     };

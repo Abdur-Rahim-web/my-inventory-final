@@ -1,13 +1,28 @@
-
+// src/lib/mongodb.ts
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI as string;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
+const MONGODB_URI = process.env.MONGODB_URI;
 
 export async function connectToDatabase() {
-  if (mongoose.connection.readyState >= 1) return;
-  return mongoose.connect(MONGODB_URI);
+    // কনসোলে প্রিন্ট করে দেখুন স্ট্রিংটি ঠিকমতো আসছে কি না
+    console.log("DEBUG - MONGODB_URI is:", MONGODB_URI);
+
+    if (!MONGODB_URI) {
+        throw new Error("MONGODB_URI is not defined.");
+    }
+
+    // স্ট্রিংটি সঠিক ফরম্যাটে আছে কি না চেক করুন
+    if (!MONGODB_URI.startsWith("mongodb://") && !MONGODB_URI.startsWith("mongodb+srv://")) {
+        throw new Error(`Invalid MONGODB_URI format: ${MONGODB_URI}`);
+    }
+
+    if (mongoose.connection.readyState >= 1) return;
+
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log("Connected to MongoDB successfully");
+    } catch (error) {
+        console.error("Database connection failed:", error);
+        throw error;
+    }
 }
