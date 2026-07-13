@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { registerUser, AuthResponse } from "@/lib/actions/auth.actions";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
     const [isPending, startTransition] = useTransition();
@@ -16,9 +17,9 @@ export default function RegisterPage() {
         startTransition(async () => {
             const result: AuthResponse = await registerUser(data);
             if (result.success) {
-                alert(result.message);
+                toast.success(result.message);
             } else {
-                console.error(result.message, result.errors || "");
+                toast.error(result.message, result.errors || "");
             }
         });
     };
