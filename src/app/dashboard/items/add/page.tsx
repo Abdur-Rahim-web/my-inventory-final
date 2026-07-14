@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { createItem } from "@/lib/actions/itemActions";
+import toast from "react-hot-toast";
 
 
 export default function AddItemPage() {
@@ -12,9 +13,18 @@ export default function AddItemPage() {
 
     async function handleSubmit(formData: FormData) {
         setLoading(true);
-        await createItem(formData);
+
+
+        const result = await createItem(formData);
+
         setLoading(false);
-        router.push("/items/manage");
+
+        if (result.success) {
+            toast.success("Item added successfully!");
+            router.push("/dashboard/items/manage");
+        } else {
+            toast.error(result.message || "Failed to add item");
+        }
     }
 
     return (
