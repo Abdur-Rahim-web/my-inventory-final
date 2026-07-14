@@ -3,7 +3,7 @@ import Item from "@/models/Item";
 import ItemCard from "@/components/items/ItemCard";
 import SearchAndFilter from "@/components/items/SearchAndFilter";
 import { IItem } from "@/types/item";
-
+import Link from "next/link";
 
 type QueryType = {
     title?: { $regex: string; $options: string };
@@ -17,16 +17,16 @@ type SortType = {
 export default async function ExplorePage({
     searchParams,
 }: {
-    searchParams: Promise<{ search?: string; category?: string; sort?: string }>;
+    searchParams: Promise<{ search?: string; category?: string; sort?: string; page?: string }>;
 }) {
     await connectToDatabase();
 
-    
     const params = await searchParams;
+    const page = parseInt(params.page || "1");
+    const limit = 8; 
+    const skip = (page - 1) * limit;
 
     const query: QueryType = {};
-
-    
     if (params.search) {
         query.title = { $regex: params.search, $options: "i" };
     }
@@ -38,7 +38,16 @@ export default async function ExplorePage({
         ? { price: 1 }
         : { createdAt: -1 };
 
-    const items = await Item.find(query).sort(sortOption).lean() as IItem[];
+    
+    const totalItems = await Item.countDocuments(query);
+    const totalPages = Math.ceil(totalItems / limit);
+
+    
+    const items = await Item.find(query)
+        .sort(sortOption)
+        .skip(skip)
+        .limit(limit)
+        .lean() as IItem[];
 
     return (
         <div className="max-w-7xl mx-auto p-6">
@@ -55,6 +64,27 @@ export default async function ExplorePage({
                     <p className="text-gray-500 col-span-4 text-center">No items found.</p>
                 )}
             </div>
+
+            
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-12">
+                    <Link
+                        href={`/items?page=${page > 1 ? page - 1 : 1}${params.search ? `&search=${params.search}` : ""}${params.category ? `&category=${params.category}` : ""}`}
+                        className={`px-4 py-2 border rounded-xl ${page === 1 ? "opacity-50 pointer-events-none" : "hover:bg-blue-600 hover:text-white"}`}
+                    >
+                        Previous
+                    </Link>
+
+                    <span className="font-semibold">Page {page} of {totalPages}</span>
+
+                    <Link
+                        href={`/items?page=${page < totalPages ? page + 1 : totalPages}${params.search ? `&search=${params.search}` : ""}${params.category ? `&category=${params.category}` : ""}`}
+                        className={`px-4 py-2 border rounded-xl ${page === totalPages ? "opacity-50 pointer-events-none" : "hover:bg-blue-600 hover:text-white"}`}
+                    >
+                        Next
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }
