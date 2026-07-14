@@ -31,9 +31,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                 await connectToDatabase();
 
-                if (credentials.email === "admin@test.com" && credentials.password === "123456") {
-                    return { id: "demo-id", name: "Admin", email: "admin@test.com", role: "admin" };
-                }
 
                 const user = await User.findOne({ email: credentials.email });
 

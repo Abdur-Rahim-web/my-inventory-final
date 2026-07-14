@@ -3,7 +3,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Item from "@/models/Item";
 import { Edit, Package } from "lucide-react";
 import Link from "next/link";
-import DeleteButton from "@/components/DeleteButton"; // Import the component
+import DeleteButton from "@/components/DeleteButton";
+import { Types } from "mongoose"; 
 
 interface ItemType {
     _id: { toString: () => string };
@@ -16,14 +17,33 @@ export default async function ManageItemsPage() {
     const session = await auth();
     await connectToDatabase();
 
-    const query = session?.user?.role === "admin" ? {} : { userId: session?.user?.id };
+    const isAdmin = session?.user?.role === "admin";
+    const userId = session?.user?.id;
+
+    
+   const query: { userId?: Types.ObjectId | null } = {};
+
+if (!isAdmin && userId) {
+    if (userId === "user-demo-id") {
+        query.userId = null;
+    } else {
+        try {
+            
+            query.userId = new Types.ObjectId(userId);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            query.userId = null;
+        }
+    }
+}
+
     const items: ItemType[] = await Item.find(query).lean();
 
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">
-                    {session?.user?.role === "admin" ? "All Inventory" : "My Items"}
+                    {isAdmin ? "All Inventory" : "My Items"}
                 </h1>
             </div>
 
@@ -55,8 +75,6 @@ export default async function ManageItemsPage() {
                                     >
                                         <Edit size={18} />
                                     </Link>
-
-                                    {/* Using the Client Component here */}
                                     <DeleteButton id={item._id.toString()} />
                                 </td>
                             </tr>

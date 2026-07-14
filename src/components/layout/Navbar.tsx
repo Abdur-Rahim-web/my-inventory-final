@@ -31,8 +31,8 @@ export default function Navbar() {
                         <Link href="/items" className="text-gray-700 hover:text-blue-600">
                             Explore Items
                         </Link>
-                        <Link href="/blog" className="text-gray-600 hover:text-blue-600 transition">
-                            Blog
+                        <Link href="/about" className="text-gray-600 hover:text-blue-600 transition">
+                            About
                         </Link>
                         {session && (
                             <Link href="/dashboard" className="text-blue-600 font-semibold flex items-center gap-2">
@@ -108,8 +108,8 @@ export default function Navbar() {
                             <Link href="/" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
                                 Home
                             </Link>
-                            <Link href="/blog" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
-                                Blog
+                            <Link href="/about" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
+                                About
                             </Link>
                             <Link href="/items" className="text-gray-700 hover:text-blue-600">
                                 Explore Items

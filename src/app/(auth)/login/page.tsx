@@ -45,6 +45,21 @@ export default function LoginPage() {
         });
     };
 
+    const handleDemoUserLogin = async () => {
+        startTransition(async () => {
+        
+            const demoUserData = { email: "user@test.com", password: "123456" };
+            const result = await loginUser(demoUserData);
+
+            if (result.success) {
+                toast.success("User Demo Login Successful!");
+                router.push("/dashboard");
+            } else {
+                toast.error("User demo login failed: " + result.message);
+            }
+        });
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <motion.div
@@ -111,6 +126,15 @@ export default function LoginPage() {
                     className="w-full mt-4 flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition"
                 >
                     Demo Admin Login
+                </button>
+
+                <button
+                    type="button"
+                    onClick={handleDemoUserLogin}
+                    disabled={isPending}
+                    className="w-full mt-2 flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition"
+                >
+                    Demo User Login
                 </button>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
