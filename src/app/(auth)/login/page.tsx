@@ -30,6 +30,21 @@ export default function LoginPage() {
         });
     };
 
+    const handleDemoLogin = async () => {
+        startTransition(async () => {
+
+            const demoData = { email: "admin@test.com", password: "123456" };
+            const result = await loginUser(demoData);
+
+            if (result.success) {
+                toast.success("Demo Login Successful!");
+                router.push("/dashboard");
+            } else {
+                toast.error("Demo login failed: " + result.message);
+            }
+        });
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <motion.div
@@ -87,6 +102,15 @@ export default function LoginPage() {
                 >
                     <FcGoogle size={24} />
                     Continue with Google
+                </button>
+
+                <button
+                    type="button"
+                    onClick={handleDemoLogin}
+                    disabled={isPending}
+                    className="w-full mt-4 flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition"
+                >
+                    Demo Admin Login
                 </button>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
