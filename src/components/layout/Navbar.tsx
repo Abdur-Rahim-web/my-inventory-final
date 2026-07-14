@@ -28,6 +28,9 @@ export default function Navbar() {
                         <Link href="/" className="text-gray-600 hover:text-blue-600 transition">
                             Home
                         </Link>
+                        <Link href="/items" className="text-gray-700 hover:text-blue-600">
+                            Explore Items
+                        </Link>
                         <Link href="/blog" className="text-gray-600 hover:text-blue-600 transition">
                             Blog
                         </Link>
@@ -107,6 +110,9 @@ export default function Navbar() {
                             </Link>
                             <Link href="/blog" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
                                 Blog
+                            </Link>
+                            <Link href="/items" className="text-gray-700 hover:text-blue-600">
+                                Explore Items
                             </Link>
                             {session ? (
                                 <>
