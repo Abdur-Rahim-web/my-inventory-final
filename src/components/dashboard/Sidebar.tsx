@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LayoutDashboard, Package, PlusCircle, Users } from "lucide-react";
+import { LayoutDashboard, Package, PlusCircle, User, Users } from "lucide-react";
 
 export default function Sidebar() {
     const pathname = usePathname();
     const { data: session } = useSession();
-    const isAdmin = session?.user?.role === "admin"; 
+    const isAdmin = session?.user?.role === "admin";
 
     const menuItems = [
         { name: "Overview", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
         { name: "Manage Items", href: "/dashboard/items/manage", icon: <Package size={20} /> },
         { name: "Add Item", href: "/dashboard/items/add", icon: <PlusCircle size={20} /> },
+        { name: "Profile", href: "/dashboard/profile", icon: <User size={20} /> },
     ];
 
     return (
@@ -34,12 +35,13 @@ export default function Sidebar() {
                     </Link>
                 ))}
                 {isAdmin && (
-                    <Link
-                        href="/dashboard/admin"
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl mt-4 text-red-600 hover:bg-red-50`}
-                    >
-                        <Users size={20} /> Admin Panel
-                    </Link>
+                    <>
+                        <div className="my-4 border-t border-gray-200"></div>
+                        <p className="px-4 text-xs font-semibold text-gray-400 uppercase">Admin Tasks</p>
+                        <Link href="/dashboard/admin/users" className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl">
+                            <Users size={20} /> Manage Users
+                        </Link>
+                    </>
                 )}
             </nav>
         </aside>
