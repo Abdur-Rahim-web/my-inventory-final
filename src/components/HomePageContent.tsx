@@ -5,7 +5,7 @@ import ItemCard from "@/components/items/ItemCard";
 import { IItem } from "@/types/item";
 import Link from "next/link";
 
-// নতুন এনিমেশন স্টাইল: স্ট্যাগার্ড ইফেক্ট (একটার পর একটা ভেসে উঠবে)
+
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
@@ -71,7 +71,7 @@ export default function HomePageContent({ latestItems }: { latestItems: IItem[] 
                     </ul>
                 </div>
 
-                {/* চার্টের বদলে এখন একটি প্রফেশনাল হাইলাইট কার্ড */}
+                
                 <motion.div
                     whileHover={{ rotate: 2 }}
                     className="bg-gradient-to-tr from-blue-600 to-indigo-700 h-80 rounded-3xl p-8 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden"
