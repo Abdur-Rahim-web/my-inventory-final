@@ -9,6 +9,12 @@ const itemSchema = new Schema({
     image: { type: String },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     createdAt: { type: Date, default: Date.now },
+    reviews: [{
+        user: String,
+        rating: Number,
+        comment: String,
+        date: { type: Date, default: Date.now },
+    }]
 });
 
 const Item = models.Item || model("Item", itemSchema);

@@ -1,3 +1,10 @@
+export interface IReview {
+    user: string;
+    rating: number;
+    comment: string;
+    date: Date;
+}
+
 export interface IItem {
     fullDesc: string;
     _id: string;
@@ -7,4 +14,5 @@ export interface IItem {
     category: string;
     image?: string;
     createdAt: Date;
+    reviews: IReview[];
 }
