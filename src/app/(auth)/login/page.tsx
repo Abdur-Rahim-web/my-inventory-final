@@ -1,7 +1,6 @@
 "use client";
 
 import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { loginUser } from "@/lib/actions/auth.actions";
 import { toast } from "react-hot-toast";
@@ -12,7 +11,7 @@ import Link from "next/link";
 
 export default function LoginPage() {
     const [isPending, startTransition] = useTransition();
-    const router = useRouter();
+    
 
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
@@ -23,7 +22,7 @@ export default function LoginPage() {
             const result = await loginUser(data);
             if (result.success) {
                 toast.success("Login Successful!");
-                router.push("/dashboard");
+                window.location.href = "/dashboard";
             } else {
                 toast.error(result.message);
             }
@@ -38,7 +37,7 @@ export default function LoginPage() {
 
             if (result.success) {
                 toast.success("Demo Login Successful!");
-                router.push("/dashboard");
+                window.location.href = "/dashboard";
             } else {
                 toast.error("Demo login failed: " + result.message);
             }
@@ -53,7 +52,7 @@ export default function LoginPage() {
 
             if (result.success) {
                 toast.success("User Demo Login Successful!");
-                router.push("/dashboard");
+                window.location.href = "/dashboard";
             } else {
                 toast.error("User demo login failed: " + result.message);
             }

@@ -22,7 +22,7 @@ export default function HomePageContent({ latestItems }: { latestItems: IItem[] 
             {/* 1. Enhanced Hero Section */}
             <section className="relative h-[70vh] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
                 <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="text-center z-10 p-6">
-                    <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-white">
+                    <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-white">
                         Find Your Premium Essentials
                     </h1>
                     <p className="text-lg text-gray-400 mb-8">Curated quality, verified items, just for you.</p>
@@ -74,7 +74,7 @@ export default function HomePageContent({ latestItems }: { latestItems: IItem[] 
                 
                 <motion.div
                     whileHover={{ rotate: 2 }}
-                    className="bg-gradient-to-tr from-blue-600 to-indigo-700 h-80 rounded-3xl p-8 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden"
+                    className="bg-linear-to-tr from-blue-600 to-indigo-700 h-80 rounded-3xl p-8 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden"
                 >
                     <div className="absolute top-0 right-0 p-8 opacity-20">
                         <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>

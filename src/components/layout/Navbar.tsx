@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation"; // এটি নতুন যোগ হয়েছে
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
@@ -10,6 +11,10 @@ import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 export default function Navbar() {
     const { data: session } = useSession();
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
+
+
+    const isActive = (path: string) => pathname === path;
 
     return (
         <motion.nav
@@ -25,17 +30,17 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8">
-                        <Link href="/" className="text-gray-600 hover:text-blue-600 transition">
+                        <Link href="/" className={`${isActive("/") ? "text-blue-600 font-bold" : "text-gray-600"} hover:text-blue-600 transition`}>
                             Home
                         </Link>
-                        <Link href="/items" className="text-gray-700 hover:text-blue-600">
+                        <Link href="/items" className={`${isActive("/items") ? "text-blue-600 font-bold" : "text-gray-700"} hover:text-blue-600`}>
                             Explore Items
                         </Link>
-                        <Link href="/about" className="text-gray-600 hover:text-blue-600 transition">
+                        <Link href="/about" className={`${isActive("/about") ? "text-blue-600 font-bold" : "text-gray-600"} hover:text-blue-600 transition`}>
                             About
                         </Link>
                         {session && (
-                            <Link href="/dashboard" className="text-blue-600 font-semibold flex items-center gap-2">
+                            <Link href="/dashboard" className={`${pathname.startsWith("/dashboard") ? "text-blue-600 font-bold" : "text-gray-600"} font-semibold flex items-center gap-2`}>
                                 <LayoutDashboard size={18} /> Dashboard
                             </Link>
                         )}
@@ -95,7 +100,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Dropdown Menu */}
+            {/* Mobile Dropdown Menu  */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -105,24 +110,44 @@ export default function Navbar() {
                         className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
                     >
                         <div className="px-4 py-4 flex flex-col gap-4">
-                            <Link href="/" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
+                            <Link href="/" onClick={() => setIsOpen(false)} className={`py-2 border-b ${isActive("/") ? "text-blue-600 font-bold" : "text-gray-600"}`}>
                                 Home
                             </Link>
-                            <Link href="/about" onClick={() => setIsOpen(false)} className="py-2 text-gray-600 border-b">
-                                About
-                            </Link>
-                            <Link href="/items" className="text-gray-700 hover:text-blue-600">
+                            <Link href="/items" onClick={() => setIsOpen(false)} className={`py-2 border-b ${isActive("/items") ? "text-blue-600 font-bold" : "text-gray-700"}`}>
                                 Explore Items
+                            </Link>
+                            <Link href="/about" onClick={() => setIsOpen(false)} className={`py-2 border-b ${isActive("/about") ? "text-blue-600 font-bold" : "text-gray-600"}`}>
+                                About
                             </Link>
                             {session ? (
                                 <>
                                     <Link
                                         href="/dashboard"
                                         onClick={() => setIsOpen(false)}
-                                        className="py-2 text-blue-600 font-semibold"
+                                        className={`py-2 font-semibold ${pathname.startsWith("/dashboard") ? "text-blue-600" : "text-gray-600"}`}
                                     >
                                         Dashboard
                                     </Link>
+
+                                    <div className="flex items-center gap-2">
+                                        {session.user?.image ? (
+                                            <Image
+                                                src={session.user.image}
+                                                alt="User profile"
+                                                width={36}
+                                                height={36}
+                                                className="rounded-full border"
+                                            />
+                                        ) : (
+                                            <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                                                {session.user?.name?.charAt(0)}
+                                            </div>
+                                        )}
+                                        <span className="text-sm font-medium text-gray-700">
+                                            {session.user?.name?.split(" ")[0]}
+                                        </span>
+                                    </div>
+
                                     <button
                                         onClick={() => {
                                             signOut();

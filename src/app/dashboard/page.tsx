@@ -2,7 +2,14 @@ import { connectToDatabase } from "@/lib/mongodb";
 import Item from "@/models/Item";
 import User from "@/models/User";
 import { auth } from "@/lib/auth";
-import { Types } from "mongoose"; 
+import { Types } from "mongoose";
+import InventoryChart from "@/components/InventoryChart";
+
+
+interface DbItem {
+    title: string;
+    price: number;
+}
 
 export default async function DashboardPage() {
     const session = await auth();
@@ -11,7 +18,7 @@ export default async function DashboardPage() {
     const isAdmin = session?.user?.role === "admin";
     const userId = session?.user?.id;
 
-    
+
     const query: { userId?: Types.ObjectId | null } = {};
 
     if (!isAdmin && userId) {
@@ -20,20 +27,24 @@ export default async function DashboardPage() {
         } else {
             try {
                 query.userId = new Types.ObjectId(userId);
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 query.userId = null;
             }
         }
     }
 
-    const [totalItems, activeItems, totalUsers] = await Promise.all([
-        isAdmin ? Item.countDocuments() : Item.countDocuments(query),
-        isAdmin 
-            ? Item.countDocuments({ price: { $gt: 0 } }) 
-            : Item.countDocuments({ ...query, price: { $gt: 0 } }),
-        isAdmin ? User.countDocuments() : 0 
+    const [totalItems, activeItems, totalUsers, itemsForChart] = await Promise.all([
+        Item.countDocuments(query),
+        Item.countDocuments({ ...query, price: { $gt: 0 } }),
+        isAdmin ? User.countDocuments() : 0,
+        Item.find(query).limit(10).lean()
     ]);
+
+    const chartData = itemsForChart.map((item: DbItem) => ({
+        name: item.title.length > 8 ? item.title.substring(0, 8) + "..." : item.title,
+        price: item.price
+    }));
 
     return (
         <div className="space-y-6 p-6">
@@ -53,6 +64,10 @@ export default async function DashboardPage() {
                         <p className="text-3xl font-bold mt-2 text-purple-600">{totalUsers}</p>
                     </div>
                 )}
+            </div>
+
+            <div className="mt-8">
+                <InventoryChart data={chartData} />
             </div>
         </div>
     );
