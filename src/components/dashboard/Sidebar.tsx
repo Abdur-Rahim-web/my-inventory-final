@@ -10,7 +10,7 @@ export default function Sidebar() {
     const { data: session } = useSession();
     const isAdmin = session?.user?.role === "admin";
 
-    // সকল আইটেমের একটি বেস লিস্ট
+    
     const allMenuItems = [
         { name: "Overview", href: "/dashboard", icon: <LayoutDashboard size={20} /> },
         { name: "Manage Items", href: "/dashboard/items/manage", icon: <Package size={20} /> },
@@ -18,7 +18,7 @@ export default function Sidebar() {
         { name: "Profile", href: "/dashboard/profile", icon: <User size={20} /> },
     ];
 
-    // যদি অ্যাডমিন হয়, তবে "Add Item" ফিল্টার করে বাদ দেওয়া হচ্ছে
+   
     const menuItems = isAdmin 
         ? allMenuItems.filter(item => item.name !== "Add Item") 
         : allMenuItems;
@@ -42,7 +42,7 @@ export default function Sidebar() {
                     </Link>
                 ))}
                 
-                {/* অ্যাডমিন টাস্ক */}
+               
                 {isAdmin && (
                     <>
                         <div className="my-4 border-t border-gray-200"></div>
