@@ -6,6 +6,7 @@ import clientPromise from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "./mongodb";
+import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
     interface User {
@@ -13,8 +14,16 @@ declare module "next-auth" {
     }
     interface Session {
         user: {
+            id?: string;
             role?: string;
         } & DefaultSession["user"];
+    }
+}
+
+declare module "next-auth/jwt" {
+    interface JWT {
+        id?: string;
+        role?: string;
     }
 }
 
@@ -52,9 +61,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
     callbacks: {
         async jwt({ token, user }) {
+
             if (user) {
-                token.id = user.id || (user as unknown as { _id: string })._id;
-                token.role = user.role;
+                token.id = user.id;
+                token.role = (user as { role?: string }).role;
+            }
+
+
+            if (!token.role && token.email) {
+                await connectToDatabase();
+                const dbUser = await User.findOne({ email: token.email });
+                if (dbUser) {
+                    token.role = dbUser.role;
+                }
             }
             return token;
         },
