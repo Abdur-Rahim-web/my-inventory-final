@@ -8,10 +8,11 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, LogIn } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [isPending, startTransition] = useTransition();
-    
+    const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
@@ -22,7 +23,8 @@ export default function LoginPage() {
             const result = await loginUser(data);
             if (result.success) {
                 toast.success("Login Successful!");
-                window.location.href = "/dashboard";
+                router.push("/dashboard"); 
+                router.refresh();
             } else {
                 toast.error(result.message);
             }
@@ -37,7 +39,8 @@ export default function LoginPage() {
 
             if (result.success) {
                 toast.success("Demo Login Successful!");
-                window.location.href = "/dashboard";
+                router.push("/dashboard"); 
+                router.refresh();
             } else {
                 toast.error("Demo login failed: " + result.message);
             }
@@ -52,7 +55,8 @@ export default function LoginPage() {
 
             if (result.success) {
                 toast.success("User Demo Login Successful!");
-                window.location.href = "/dashboard";
+                router.push("/dashboard"); 
+                router.refresh();
             } else {
                 toast.error("User demo login failed: " + result.message);
             }
