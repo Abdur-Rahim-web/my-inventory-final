@@ -6,29 +6,27 @@ export async function proxy(request: NextRequest) {
     const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
     const { pathname } = request.nextUrl;
 
-
+    
     if (pathname.startsWith("/dashboard")) {
         if (!token) {
-
-            return NextResponse.redirect(new URL("/api/auth/signin", request.url));
+            
+            return NextResponse.redirect(new URL("/login", request.url));
         }
     }
 
-
-    if (pathname.startsWith("/dashboard/(admin)")) {
+    
+    if (pathname.startsWith("/dashboard/admin")) {
         if (token?.role !== "admin") {
             return NextResponse.redirect(new URL("/dashboard", request.url));
         }
     }
 
-
-    if (pathname === "/api/auth/signin" && token) {
+  
+    if (pathname === "/login" && token) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     return NextResponse.next();
-
-
 }
 
 
