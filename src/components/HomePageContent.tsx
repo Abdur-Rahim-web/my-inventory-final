@@ -71,7 +71,7 @@ export default function HomePageContent({ latestItems }: { latestItems: IItem[] 
                     </ul>
                 </div>
 
-                
+
                 <motion.div
                     whileHover={{ rotate: 2 }}
                     className="bg-linear-to-tr from-blue-600 to-indigo-700 h-80 rounded-3xl p-8 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden"
@@ -104,6 +104,43 @@ export default function HomePageContent({ latestItems }: { latestItems: IItem[] 
                             <p className="text-gray-600">{f.a}</p>
                         </motion.div>
                     ))}
+                </div>
+            </section>
+
+            {/* 6. Testimonials Section */}
+            <section className="py-20 bg-white">
+                <div className="max-w-6xl mx-auto px-6">
+                    <h2 className="text-3xl font-bold text-center mb-16">What Our Users Say</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            { name: "John Doe", text: "Excellent quality and fast delivery! Highly recommended." },
+                            { name: "Sarah Smith", text: "Found exactly what I needed. The interface is so smooth." },
+                            { name: "Mike Ross", text: "Great marketplace for premium essentials. Simply the best." }
+                        ].map((review, i) => (
+                            <div key={i} className="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-lg transition">
+                                <p className="text-gray-600 mb-4 italic">&quot;{review.text}&quot;</p>
+                                <h4 className="font-bold text-blue-600">- {review.name}</h4>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 7. Newsletter Section */}
+            <section className="py-20 bg-blue-600 text-white text-center">
+                <div className="max-w-2xl mx-auto px-6">
+                    <h2 className="text-4xl font-bold mb-4">Stay Updated</h2>
+                    <p className="text-blue-100 mb-8">Subscribe to our newsletter and get the latest deals delivered straight to your inbox.</p>
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            className="flex-1 px-6 py-4 rounded-xl text-gray-900 outline-none"
+                        />
+                        <button className="px-8 py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition">
+                            Subscribe
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
